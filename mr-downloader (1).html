@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MR Downloader | دانلودر اینستاگرام و واتساپ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#060a1a;
+    --bg-1:#0b1230;
+    --bg-2:#101a45;
+    --blue-deep:#1a2a6c;
+    --blue-mid:#2e5bff;
+    --blue-bright:#4f8dff;
+    --cyan:#5fe3ff;
+    --lav:#8fa4ff;
+    --ink:#eef2ff;
+    --ink-dim:#a9b6e0;
+    --ink-mute:#6d7bab;
+    --ig:#ff5fa8;
+    --wa:#3ee08a;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:
+      radial-gradient(1100px 600px at 82% -8%, rgba(79,141,255,.22), transparent 60%),
+      radial-gradient(900px 500px at 8% 105%, rgba(95,227,255,.14), transparent 60%),
+      linear-gradient(180deg, var(--bg-0), var(--bg-1) 45%, var(--bg-0));
+    color:var(--ink);
+    font-family:'Vazirmatn', sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  .num{font-family:'Space Grotesk', 'Vazirmatn', sans-serif;}
+
+  /* ---------- ambient grid ---------- */
+  .grid-veil{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(95,141,255,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(95,141,255,.06) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(900px 700px at 60% 20%, #000 10%, transparent 75%);
+  }
+
+  /* ---------- nav ---------- */
+  header{
+    position:relative; z-index:5;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:26px 6vw;
+  }
+  .brand{
+    display:flex; align-items:center; gap:12px;
+    font-weight:800; font-size:1.15rem; letter-spacing:.02em;
+  }
+  .brand .dot{
+    width:38px; height:38px; border-radius:11px;
+    background:linear-gradient(135deg, var(--blue-mid), var(--cyan));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 24px rgba(79,141,255,.55);
+    font-family:'Space Grotesk'; font-weight:700; color:#06102a; font-size:1.05rem;
+  }
+  .brand span.tag{
+    font-size:.62rem; font-weight:500; color:var(--ink-mute);
+    display:block; letter-spacing:.15em; margin-top:1px;
+  }
+  nav a{
+    color:var(--ink-dim); text-decoration:none; font-size:.92rem; margin-inline-start:28px;
+    transition:color .2s ease;
+  }
+  nav a:hover{color:var(--cyan);}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; z-index:2;
+    display:grid; grid-template-columns:1.05fr .95fr; align-items:center;
+    gap:40px;
+    padding:40px 6vw 90px;
+    max-width:1400px; margin:0 auto;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:9px;
+    font-size:.78rem; color:var(--cyan); font-weight:600;
+    background:rgba(95,227,255,.08); border:1px solid rgba(95,227,255,.28);
+    padding:7px 14px; border-radius:999px; margin-bottom:22px;
+  }
+  .eyebrow .blip{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan); animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%,100%{opacity:1} 50%{opacity:.3}}
+
+  h1{
+    font-size:clamp(2.3rem, 4.2vw, 3.6rem);
+    font-weight:900; line-height:1.22; letter-spacing:-.01em;
+    margin-bottom:22px;
+  }
+  h1 .accent{
+    background:linear-gradient(90deg, var(--cyan), var(--blue-bright) 60%, var(--lav));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .lede{
+    color:var(--ink-dim); font-size:1.06rem; line-height:1.9; max-width:52ch; margin-bottom:34px;
+  }
+
+  .cta-row{display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:44px;}
+  .btn-primary{
+    position:relative; overflow:hidden;
+    display:inline-flex; align-items:center; gap:10px;
+    background:linear-gradient(135deg, var(--blue-mid), var(--cyan));
+    color:#04102b; font-weight:800; font-size:1rem;
+    padding:16px 30px; border-radius:14px; text-decoration:none;
+    box-shadow:0 12px 34px -8px rgba(46,91,255,.65);
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .btn-primary:hover{transform:translateY(-3px); box-shadow:0 18px 40px -6px rgba(46,91,255,.8);}
+  .btn-primary svg{width:19px; height:19px;}
+  .btn-ghost{
+    color:var(--ink-dim); text-decoration:none; font-size:.92rem; font-weight:600;
+    border-bottom:1px solid rgba(169,182,224,.35); padding-bottom:3px;
+    transition:color .2s ease, border-color .2s ease;
+  }
+  .btn-ghost:hover{color:var(--cyan); border-color:var(--cyan);}
+
+  .trust{display:flex; gap:26px; flex-wrap:wrap;}
+  .trust .item{display:flex; align-items:center; gap:9px; color:var(--ink-mute); font-size:.85rem;}
+  .trust .badge{
+    width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+  }
+  .trust .badge svg{width:15px;height:15px;}
+
+  /* ---------- character stage ---------- */
+  .stage{
+    position:relative; aspect-ratio:1/1.08; max-width:520px; margin:0 auto;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .halo{
+    position:absolute; inset:6%;
+    border-radius:50%;
+    background:radial-gradient(circle at 50% 42%, rgba(79,141,255,.35), rgba(79,141,255,.06) 55%, transparent 72%);
+    filter:blur(6px);
+  }
+  .ring{
+    position:absolute; border-radius:50%; border:1px dashed rgba(143,164,255,.28);
+    animation:spin linear infinite;
+  }
+  .ring.r1{inset:2%; animation-duration:26s;}
+  .ring.r2{inset:12%; animation-duration:38s; animation-direction:reverse; border-style:solid; border-color:rgba(95,227,255,.14);}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .orbit-icon{
+    position:absolute; width:52px; height:52px; border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 26px -6px rgba(0,0,0,.55);
+    animation:float 5.5s ease-in-out infinite;
+  }
+  .orbit-icon svg{width:26px; height:26px;}
+  .oi-ig{
+    top:6%; left:2%;
+    background:linear-gradient(135deg,#ff5fa8,#ff9a4f);
+    animation-delay:.2s;
+  }
+  .oi-wa{
+    bottom:9%; right:0%;
+    background:linear-gradient(135deg,#2fd97b,#22b7ff);
+    animation-delay:1s;
+  }
+  @keyframes float{0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)}}
+
+  .char-wrap{position:relative; width:74%; filter:drop-shadow(0 22px 40px rgba(10,20,60,.6));}
+  .char-wrap svg{width:100%; height:auto; display:block;}
+
+  /* ---------- feature strip ---------- */
+  .section-head{
+    text-align:center; max-width:640px; margin:0 auto 54px;
+  }
+  .section-head .kicker{
+    font-size:.78rem; letter-spacing:.18em; color:var(--cyan); font-weight:700; margin-bottom:14px; display:block;
+  }
+  .section-head h2{
+    font-size:clamp(1.7rem,2.6vw,2.3rem); font-weight:800; margin-bottom:14px;
+  }
+  .section-head p{color:var(--ink-dim); line-height:1.85; font-size:1rem;}
+
+  .features{
+    position:relative; z-index:2;
+    max-width:1200px; margin:0 auto; padding:70px 6vw 40px;
+  }
+  .cards{
+    display:grid; grid-template-columns:1fr 1fr; gap:26px;
+  }
+  .card{
+    position:relative; border-radius:22px; padding:34px 30px;
+    background:linear-gradient(165deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+    border:1px solid rgba(255,255,255,.08);
+    overflow:hidden;
+    transition:transform .3s ease, border-color .3s ease;
+  }
+  .card:hover{transform:translateY(-6px); border-color:rgba(95,227,255,.35);}
+  .card::before{
+    content:''; position:absolute; inset:0; opacity:.5; pointer-events:none;
+    background:radial-gradient(320px 180px at 90% -10%, var(--glow, rgba(79,141,255,.25)), transparent 70%);
+  }
+  .card.ig{--glow:rgba(255,95,168,.22);}
+  .card.wa{--glow:rgba(62,224,138,.22);}
+
+  .card-icon{
+    width:58px; height:58px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+    margin-bottom:22px; box-shadow:0 10px 24px -8px rgba(0,0,0,.5);
+  }
+  .card.ig .card-icon{background:linear-gradient(135deg,#ff5fa8,#ff9a4f);}
+  .card.wa .card-icon{background:linear-gradient(135deg,#2fd97b,#22b7ff);}
+  .card-icon svg{width:28px; height:28px;}
+
+  .card h3{font-size:1.22rem; font-weight:800; margin-bottom:12px;}
+  .card p{color:var(--ink-dim); font-size:.93rem; line-height:1.85; margin-bottom:20px;}
+  .card ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .card li{
+    display:flex; align-items:center; gap:10px; font-size:.87rem; color:var(--ink-dim);
+  }
+  .card li svg{width:15px; height:15px; flex-shrink:0; color:var(--cyan);}
+
+  /* ---------- how it works ---------- */
+  .steps{
+    position:relative; z-index:2;
+    max-width:1100px; margin:0 auto; padding:60px 6vw 100px;
+  }
+  .step-row{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:22px;
+  }
+  .step{
+    padding:26px 22px; border-radius:18px;
+    background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.07);
+  }
+  .step .n{
+    font-family:'Space Grotesk'; font-weight:700; font-size:1.6rem;
+    color:transparent; -webkit-text-stroke:1.4px var(--cyan);
+    margin-bottom:14px; display:block;
+  }
+  .step h4{font-size:1rem; font-weight:700; margin-bottom:8px;}
+  .step p{color:var(--ink-mute); font-size:.85rem; line-height:1.8;}
+
+  /* ---------- final cta ---------- */
+  .final-cta{
+    position:relative; z-index:2; margin:0 6vw 90px; max-width:1200px; margin-inline:auto;
+    border-radius:28px; padding:64px 8vw; text-align:center; overflow:hidden;
+    background:linear-gradient(135deg, var(--blue-deep), var(--bg-1) 60%);
+    border:1px solid rgba(95,141,255,.25);
+  }
+  .final-cta::after{
+    content:''; position:absolute; inset:0; z-index:-1;
+    background:radial-gradient(500px 260px at 50% 0%, rgba(95,227,255,.2), transparent 70%);
+  }
+  .final-cta h2{font-size:clamp(1.6rem,2.8vw,2.2rem); font-weight:800; margin-bottom:16px;}
+  .final-cta p{color:var(--ink-dim); margin-bottom:30px; font-size:1rem;}
+
+  footer{
+    position:relative; z-index:2; text-align:center; padding:30px 6vw 40px;
+    color:var(--ink-mute); font-size:.82rem; border-top:1px solid rgba(255,255,255,.06);
+  }
+  footer .foot-brand{color:var(--ink-dim); font-weight:700;}
+
+  @media (max-width:920px){
+    .hero{grid-template-columns:1fr; text-align:center;}
+    .lede{margin-inline:auto;}
+    .cta-row, .trust{justify-content:center;}
+    .stage{margin-top:10px;}
+    .cards{grid-template-columns:1fr;}
+    .step-row{grid-template-columns:1fr;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-veil"></div>
+
+<header>
+  <div class="brand">
+    <div class="dot num">MR</div>
+    <div>
+      MR Downloader
+      <span class="tag">DOWNLOAD ANYTHING</span>
+    </div>
+  </div>
+  <nav>
+    <a href="#features">امکانات</a>
+    <a href="#how">راهنما</a>
+    <a href="#get">دانلود</a>
+  </nav>
+</header>
+
+<main class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="blip"></span> نسخه‌ی جدید MR Downloader آماده‌ست</div>
+    <h1>دانلود مستقیم از <span class="accent">اینستاگرام و واتساپ</span><br>فقط با یک لینک</h1>
+    <p class="lede">
+      عکس، ویدیو، استوری، ریلز و وضعیت‌ها رو با کیفیت اصلی و بدون واترمارک ذخیره کن.
+      کافیه لینک رو بچسبونی، بقیه‌ش با MR Downloader.
+    </p>
+    <div class="cta-row">
+      <a id="downloadBtn" class="btn-primary" href="#" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
+        دانلود اپلیکیشن
+      </a>
+      <a class="btn-ghost" href="#how">چطور کار می‌کنه؟</a>
+    </div>
+    <div class="trust">
+      <div class="item"><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span> بدون واترمارک</div>
+      <div class="item"><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span> کیفیت اصلی</div>
+      <div class="item"><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span> رایگان</div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="halo"></div>
+    <div class="ring r1"></div>
+    <div class="ring r2"></div>
+
+    <div class="orbit-icon oi-ig">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="white" stroke="none"/></svg>
+    </div>
+    <div class="orbit-icon oi-wa">
+      <svg viewBox="0 0 24 24" fill="white" stroke="none"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.1-1.33A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.24.68-1.4 1.3-1.93 1.35-.5.06-1.1.08-1.78-.11-.4-.12-.93-.3-1.6-.6-2.8-1.21-4.63-4.02-4.77-4.2-.14-.19-1.14-1.52-1.14-2.9s.72-2.06.98-2.34c.25-.28.55-.35.73-.35h.52c.17 0 .4-.06.62.48.24.57.8 1.98.87 2.13.07.14.11.31.02.5-.09.19-.14.3-.28.46-.14.16-.29.36-.42.48-.14.14-.28.28-.12.56.16.28.72 1.2 1.55 1.94 1.06.95 1.96 1.25 2.24 1.39.28.14.44.12.6-.07.16-.19.68-.8.86-1.07.18-.28.36-.23.6-.14.24.09 1.53.72 1.79.85.26.13.43.19.5.3.07.11.07.62-.17 1.3z"/></svg>
+    </div>
+
+    <div class="char-wrap">
+      <svg viewBox="0 0 420 460" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="skinShade" cx="45%" cy="35%" r="70%">
+            <stop offset="0%" stop-color="#2a3868"/>
+            <stop offset="100%" stop-color="#141c3f"/>
+          </radialGradient>
+          <linearGradient id="hairGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0f1840"/>
+            <stop offset="100%" stop-color="#1e2f73"/>
+          </linearGradient>
+          <linearGradient id="jacketGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#152159"/>
+            <stop offset="100%" stop-color="#0b1230"/>
+          </linearGradient>
+          <linearGradient id="stripeGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#5fe3ff"/>
+            <stop offset="100%" stop-color="#4f8dff"/>
+          </linearGradient>
+          <radialGradient id="eyeGlow" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="#c9f8ff"/>
+            <stop offset="55%" stop-color="#5fe3ff"/>
+            <stop offset="100%" stop-color="#2e6bff"/>
+          </radialGradient>
+          <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="9" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- ambient glow behind head -->
+        <ellipse cx="210" cy="150" rx="150" ry="140" fill="#2e5bff" opacity=".18" filter="url(#softGlow)"/>
+
+        <!-- back hair -->
+        <path d="M95 150c-14 70 4 150 34 190 12-30 8-70 6-96 34 20 60 22 78 20 26-2 56-16 74-42 10 34 6 78-4 110 34-40 52-104 40-166-14-70-70-118-140-114C160 55 108 88 95 150z" fill="url(#hairGrad)"/>
+
+        <!-- neck -->
+        <rect x="182" y="222" width="56" height="46" rx="14" fill="url(#skinShade)"/>
+
+        <!-- jacket shoulders -->
+        <path d="M90 460V360c0-46 30-78 60-92l30 40 32-22 32 22 30-40c30 14 60 46 60 92v100H90z" fill="url(#jacketGrad)"/>
+        <path d="M150 308l32 22 28-20 28 20 32-22 14 18-42 34-32-16-32 16-42-34 14-18z" fill="#0a1026"/>
+        <!-- collar stripes -->
+        <path d="M150 308c14 44 30 66 60 78 30-12 46-34 60-78" fill="none" stroke="url(#stripeGrad)" stroke-width="4" opacity=".8"/>
+
+        <!-- zipper / center stripe -->
+        <rect x="204" y="330" width="12" height="120" rx="6" fill="url(#stripeGrad)" opacity=".85"/>
+
+        <!-- shoulder panels -->
+        <path d="M96 372c6-38 26-66 54-82l14 20c-24 16-40 40-46 74l-22-12z" fill="#5fe3ff" opacity=".18"/>
+        <path d="M324 372c-6-38-26-66-54-82l-14 20c24 16 40 40 46 74l22-12z" fill="#5fe3ff" opacity=".18"/>
+
+        <!-- headphones band -->
+        <path d="M118 150a92 92 0 0 1 184 0" fill="none" stroke="#0a1026" stroke-width="16" stroke-linecap="round"/>
+        <circle cx="112" cy="170" r="24" fill="#0a1026"/>
+        <circle cx="308" cy="170" r="24" fill="#0a1026"/>
+        <circle cx="112" cy="170" r="10" fill="url(#eyeGlow)"/>
+        <circle cx="308" cy="170" r="10" fill="url(#eyeGlow)"/>
+
+        <!-- face -->
+        <path d="M138 168c0-58 34-100 72-100s72 42 72 100c0 62-32 104-72 104s-72-42-72-104z" fill="url(#skinShade)"/>
+
+        <!-- front hair / fringe -->
+        <path d="M132 132c8-46 40-78 78-78s70 32 78 78c-18-14-40-8-52 4-10-16-24-24-26-24s-16 8-26 24c-12-12-34-18-52-4z" fill="url(#hairGrad)"/>
+        <path d="M150 118c6 12 6 26 2 36-10-4-18-14-20-28 6-4 12-8 18-8z" fill="url(#hairGrad)"/>
+        <path d="M270 118c-6 12-6 26-2 36 10-4 18-14 20-28-6-4-12-8-18-8z" fill="url(#hairGrad)"/>
+        <path d="M186 106c-4 14-4 30 2 42 6-2 12-8 14-18-4-10-10-18-16-24z" fill="url(#hairGrad)"/>
+        <path d="M234 106c4 14 4 30-2 42-6-2-12-8-14-18 4-10 10-18 16-24z" fill="url(#hairGrad)"/>
+
+        <!-- eyebrows -->
+        <path d="M168 172q16-10 32-2" stroke="#0a1026" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M252 172q-16-10-32-2" stroke="#0a1026" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+        <!-- eyes -->
+        <ellipse cx="182" cy="192" rx="15" ry="18" fill="#050914"/>
+        <ellipse cx="238" cy="192" rx="15" ry="18" fill="#050914"/>
+        <ellipse cx="182" cy="190" rx="9" ry="12" fill="url(#eyeGlow)"/>
+        <ellipse cx="238" cy="190" rx="9" ry="12" fill="url(#eyeGlow)"/>
+        <circle cx="179" cy="184" r="3" fill="#ffffff"/>
+        <circle cx="235" cy="184" r="3" fill="#ffffff"/>
+
+        <!-- blush -->
+        <ellipse cx="160" cy="216" rx="12" ry="7" fill="#5fe3ff" opacity=".22"/>
+        <ellipse cx="260" cy="216" rx="12" ry="7" fill="#5fe3ff" opacity=".22"/>
+
+        <!-- mouth -->
+        <path d="M198 226q12 10 24 0" stroke="#0a1026" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+        <!-- side hair strands -->
+        <path d="M120 150c-6 40-2 80 16 108-6-36-8-70-2-100l-14-8z" fill="url(#hairGrad)"/>
+        <path d="M300 150c6 40 2 80-16 108 6-36 8-70 2-100l14-8z" fill="url(#hairGrad)"/>
+
+        <!-- floating spark accents -->
+        <g filter="url(#softGlow)">
+          <circle cx="74" cy="120" r="4" fill="#5fe3ff"/>
+          <circle cx="352" cy="96" r="3" fill="#8fa4ff"/>
+          <circle cx="60" cy="220" r="3" fill="#4f8dff"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</main>
+
+<section class="features" id="features">
+  <div class="section-head">
+    <span class="kicker">امکانات</span>
+    <h2>همه‌چیز رو با MR Downloader ذخیره کن</h2>
+    <p>دو منبع، یک اپلیکیشن. بدون نیاز به لاگین و بدون از دست دادن کیفیت.</p>
+  </div>
+
+  <div class="cards">
+    <div class="card ig">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="white" stroke="none"/></svg>
+      </div>
+      <h3>دانلود از اینستاگرام</h3>
+      <p>پست، ریلز، استوری و IGTV رو با بهترین کیفیت موجود دانلود کن؛ بدون واترمارک و بدون افت کیفیت.</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> پست‌ها و کروسل‌ها</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> ریلز و ویدیوهای عمومی</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> استوری‌های فعال</li>
+      </ul>
+    </div>
+
+    <div class="card wa">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="white" stroke="none"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.1-1.33A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.24.68-1.4 1.3-1.93 1.35-.5.06-1.1.08-1.78-.11-.4-.12-.93-.3-1.6-.6-2.8-1.21-4.63-4.02-4.77-4.2-.14-.19-1.14-1.52-1.14-2.9s.72-2.06.98-2.34c.25-.28.55-.35.73-.35h.52c.17 0 .4-.06.62.48.24.57.8 1.98.87 2.13.07.14.11.31.02.5-.09.19-.14.3-.28.46-.14.16-.29.36-.42.48-.14.14-.28.28-.12.56.16.28.72 1.2 1.55 1.94 1.06.95 1.96 1.25 2.24 1.39.28.14.44.12.6-.07.16-.19.68-.8.86-1.07.18-.28.36-.23.6-.14.24.09 1.53.72 1.79.85.26.13.43.19.5.3.07.11.07.62-.17 1.3z"/></svg>
+      </div>
+      <h3>دانلود از واتساپ</h3>
+      <p>وضعیت‌ها (استاتوس) و فایل‌های رسانه‌ای رو مستقیم روی گالری‌ات ذخیره کن، همون لحظه‌ای که می‌بینی‌شون.</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> ذخیره‌ی وضعیت (استاتوس)</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> عکس و ویدیوی ارسالی</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> ذخیره با یک لمس</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="steps" id="how">
+  <div class="section-head">
+    <span class="kicker">راهنما</span>
+    <h2>در سه قدم آماده‌ست</h2>
+  </div>
+  <div class="step-row">
+    <div class="step">
+      <span class="n num">01</span>
+      <h4>لینک رو کپی کن</h4>
+      <p>پست، ریلز یا استوری موردنظر رو باز کن و لینک یا اشتراک‌گذاری‌اش رو کپی کن.</p>
+    </div>
+    <div class="step">
+      <span class="n num">02</span>
+      <h4>داخل اپ پیست کن</h4>
+      <p>وارد MR Downloader شو، لینک رو در کادر جستجو پیست کن و منبع رو انتخاب کن.</p>
+    </div>
+    <div class="step">
+      <span class="n num">03</span>
+      <h4>دانلود و ذخیره</h4>
+      <p>روی دکمه‌ی دانلود بزن؛ فایل با کیفیت اصلی مستقیم توی گالری‌ات ذخیره می‌شه.</p>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta" id="get">
+  <h2>همین حالا MR Downloader رو نصب کن</h2>
+  <p>رایگان، سبک و بدون تبلیغات مزاحم.</p>
+  <a id="downloadBtn2" class="btn-primary" href="#" download>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
+    دانلود اپلیکیشن
+  </a>
+</section>
+
+<footer>
+  <span class="foot-brand">MR Downloader</span> — دانلود آسان از اینستاگرام و واتساپ · تمام حقوق محفوظ است
+</footer>
+
+<script>
+  // ⬇️ لینک دانلود فایل خودت رو اینجا جایگزین کن ⬇️
+  const DOWNLOAD_LINK = "https://s1.file2linkdl.ir/file/WQNzGiAM42d9QuVbDnkmbg";
+
+  document.getElementById('downloadBtn').href = DOWNLOAD_LINK;
+  document.getElementById('downloadBtn2').href = DOWNLOAD_LINK;
+</script>
+
+</body>
+</html>
